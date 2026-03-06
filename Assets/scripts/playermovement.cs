@@ -9,7 +9,6 @@ public class playermovement : MonoBehaviour
     public bool isHoldingJump;
     public bool isJumpHeld;
     public bool isOnGround;
-    public bool isGrounded;
     public bool canJumpAgain;
 
     [SerializeField]
@@ -62,7 +61,7 @@ public class playermovement : MonoBehaviour
 
     void JumpCondition()
     {
-        isOnGround = isGrounded(1.1f);
+        isOnGround = IsGrounded(1.1f);
 
         if (isJumpHeld)
         {
@@ -70,9 +69,30 @@ public class playermovement : MonoBehaviour
             {
                 if (canJumpAgain)
                 {
-                    rb.AddForce(new Vector2)
+                    rb.AddForce(new Vector2(0, jumpforce), ForceMode2D.Impulse);
+                    canJumpAgain = false;
+                    StartCoroutine(DelayedJump());
+                }
+                else if (isJumpHeld)
+                {
+                    rb.AddForce(new Vector2(0, jumpforce));
                 }
             }
         }
     }
+    bool IsGrounded(float distance)
+    {
+        RaycastHit2D hit;
+
+        hit = Physics2D.Raycast(this.transform.position, Vector2.down, distance, groundMask);
+        Debug.DrawRay(this.transform.position, Vector2.down, Color.red);
+
+        return hit;
+    }
+
+    private void FixedUpdate()...
+
+    public void MoveInput(InputAction.CallbackContext context)...
+
+
 }
