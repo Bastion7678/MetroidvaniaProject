@@ -2301,7 +2301,11 @@ PrefabInstance:
     - target: {fileID: 5415697115513351591, guid: d44e709c1e8956f4986f2d35669d5b54, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 330585548}
+      objectReference: {fileID: 102900000, guid: 8c9cfa26abfee488c85f1582747f6a02, type: 3}
+    - target: {fileID: 5415697115513351591, guid: d44e709c1e8956f4986f2d35669d5b54, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 7355663974253394890, guid: d44e709c1e8956f4986f2d35669d5b54, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
