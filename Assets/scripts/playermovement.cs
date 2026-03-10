@@ -8,7 +8,7 @@ public class playermovement : MonoBehaviour
     public float jumpforce;
     public bool isHoldingJump;
     public bool isJumpHeld;
-    public bool isOnGround;
+    public bool isGrounded;
     public bool canJumpAgain;
 
     [SerializeField]
@@ -18,11 +18,6 @@ public class playermovement : MonoBehaviour
 
     private Rigidbody2D rb;
     private Vector2 move;
-
-    private void FixedUpdate()
-    {
-        
-    }
 
     private bool CheckGrounding()
     {
@@ -61,26 +56,41 @@ public class playermovement : MonoBehaviour
 
     void JumpCondition()
     {
-        isOnGround = IsGrounded(1.1f);
-
-        if (isJumpHeld)
+        if (this.gameobject.GetComponent<PlayerStats().currently == false && this.gameobject.GetComponet<PlayerStats>.AbleToMove == true)
         {
-            if (isOnGround)
+            isOnGround = IsGrounded(1.1f);
+
+            if (isJumpHeld)
             {
-                if (canJumpAgain)
+                if (isOnGround)
                 {
-                    rb.AddForce(new Vector2(0, jumpforce), ForceMode2D.Impulse);
-                    canJumpAgain = false;
-                    StartCoroutine(DelayedJump());
-                }
-                else if (isJumpHeld)
-                {
-                    rb.AddForce(new Vector2(0, jumpforce));
+                    if (canJumpAgain)
+                    {
+                        rb.AddForce(new Vector2(0, jumpforce), ForceMode2D.Impulse);
+                        canJumpAgain = false;
+                        StartCoroutine(DelayedJump());
+                    }
+                    else if (isJumpHeld)
+                    {
+                        rb.AddForce(new Vector2(0, jumpforce));
+                    }
                 }
             }
         }
     }
-    bool IsGrounded(float distance)
+
+    private void FixedUpdate()
+    {
+        JumpCondition();
+    }
+
+    public void MoveInput(InputAction.CallbackContext context)
+
+    public void JumpInput(InputAction.CallbackContext context)
+
+    public void Walking()
+
+    public bool IsGrounded(float distance)
     {
         RaycastHit2D hit;
 
@@ -90,22 +100,14 @@ public class playermovement : MonoBehaviour
         return hit;
     }
 
-    private void FixedUpdate()...
+    public void ReturnToStable
 
-    public void MoveInput(InputAction.CallbackContext context)...
-
-    public void JumpInput(InputAction.CallbackContext context)...
-
-    public void Walking()...
-
-    public void ReturnToStable()...
-
-
-    IEnumerator DelayedJump()
+    IEnumerator playermovement.DelayedJump()
     {
         yield return new WaitForSeconds(.15f);
         canJumpAgain = true;
     }
+
 
 
 }
