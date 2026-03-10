@@ -94,5 +94,18 @@ public class playermovement : MonoBehaviour
 
     public void MoveInput(InputAction.CallbackContext context)...
 
+    public void JumpInput(InputAction.CallbackContext context)...
+
+    public void Walking()...
+
+    public void ReturnToStable()...
+
+
+    IEnumerator DelayedJump()
+    {
+        yield return new WaitForSeconds(.15f);
+        canJumpAgain = true;
+    }
+
 
 }
