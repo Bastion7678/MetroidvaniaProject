@@ -1,3 +1,4 @@
+using System.Collections;
 using Unity.VisualScripting.Antlr3.Runtime.Tree;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -16,7 +17,7 @@ public class playermovement : MonoBehaviour
     [SerializeField]
     private LayerMask groundMask;
 
-    private Rigidbody2D rb;
+    private Rigidbody2D rigidBody;
     private Vector2 move;
 
     private bool CheckGrounding()
@@ -29,12 +30,12 @@ public class playermovement : MonoBehaviour
     }
     public void Awake()
     {
-        rb = this.GetComponent<Rigidbody2D>();
+        rigidBody = this.GetComponent<Rigidbody2D>();
     }
 
     public void Move(InputAction.CallbackContext context)
     {
-        rb.linearVelocity = new Vector2(context.ReadValue<Vector2>().x * movespeed, rb.linearVelocity.y);
+        rigidBody.linearVelocity = new Vector2(context.ReadValue<Vector2>().x * movespeed, rigidBody.linearVelocity.y);
     }
     public void Jump(InputAction.CallbackContext context)
     {
@@ -50,15 +51,15 @@ public class playermovement : MonoBehaviour
         }
         isJumpHeld = context.ReadValue<float>() > 0;
 
-        rb.AddForce(jumpforce * Vector2.up, ForceMode2D.Impulse);
+        rigidBody.AddForce(jumpforce * Vector2.up, ForceMode2D.Impulse);
 
     }
 
     void JumpCondition()
     {
-        if (this.gameobject.GetComponent<PlayerStats().currently == false && this.gameobject.GetComponet<PlayerStats>.AbleToMove == true)
-        {
-            isOnGround = IsGrounded(1.1f);
+       
+        
+           bool isOnGround = IsGrounded(1.1f);
 
             if (isJumpHeld)
             {
@@ -66,17 +67,17 @@ public class playermovement : MonoBehaviour
                 {
                     if (canJumpAgain)
                     {
-                        rb.AddForce(new Vector2(0, jumpforce), ForceMode2D.Impulse);
+                        rigidBody.AddForce(new Vector2(0, jumpforce), ForceMode2D.Impulse);
                         canJumpAgain = false;
                         StartCoroutine(DelayedJump());
                     }
                     else if (isJumpHeld)
                     {
-                        rb.AddForce(new Vector2(0, jumpforce));
+                        rigidBody.AddForce(new Vector2(0, jumpforce));
                     }
                 }
             }
-        }
+        
     }
 
     private void FixedUpdate()
@@ -85,10 +86,19 @@ public class playermovement : MonoBehaviour
     }
 
     public void MoveInput(InputAction.CallbackContext context)
+    {
+
+    }
 
     public void JumpInput(InputAction.CallbackContext context)
+    {
+
+    }
 
     public void Walking()
+    {
+
+    }
 
     public bool IsGrounded(float distance)
     {
@@ -100,9 +110,12 @@ public class playermovement : MonoBehaviour
         return hit;
     }
 
-    public void ReturnToStable
+    public void ReturnToStable()
+    {
 
-    IEnumerator playermovement.DelayedJump()
+    }
+    
+    IEnumerator DelayedJump()
     {
         yield return new WaitForSeconds(.15f);
         canJumpAgain = true;
