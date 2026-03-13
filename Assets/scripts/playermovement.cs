@@ -31,6 +31,7 @@ public class playermovement : MonoBehaviour
     public void Awake()
     {
         rigidBody = this.GetComponent<Rigidbody2D>();
+        canJumpAgain = true;
     }
 
     public void Move(InputAction.CallbackContext context)
@@ -51,14 +52,12 @@ public class playermovement : MonoBehaviour
         }
         isJumpHeld = context.ReadValue<float>() > 0;
 
-        rigidBody.AddForce(jumpforce * Vector2.up, ForceMode2D.Impulse);
+        //rigidBody.AddForce(jumpforce * Vector2.up, ForceMode2D.Impulse);
 
     }
 
     void JumpCondition()
     {
-       
-        
            bool isOnGround = IsGrounded(1.1f);
 
             if (isJumpHeld)
@@ -68,10 +67,10 @@ public class playermovement : MonoBehaviour
                     if (canJumpAgain)
                     {
                         rigidBody.AddForce(new Vector2(0, jumpforce), ForceMode2D.Impulse);
-                        canJumpAgain = false;
-                        StartCoroutine(DelayedJump());
+                            canJumpAgain = false;
+                            StartCoroutine(DelayedJump());
                     }
-                    else if (isJumpHeld)
+                    else if (isHoldingJump)
                     {
                         rigidBody.AddForce(new Vector2(0, jumpforce));
                     }
@@ -120,7 +119,4 @@ public class playermovement : MonoBehaviour
         yield return new WaitForSeconds(.15f);
         canJumpAgain = true;
     }
-
-
-
 }
