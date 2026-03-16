@@ -2,6 +2,8 @@ using System.Collections;
 using Unity.VisualScripting.Antlr3.Runtime.Tree;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Rendering;
+using static UnityEditor.Searcher.SearcherWindow.Alignment;
 
 public class playermovement : MonoBehaviour
 {
@@ -11,23 +13,33 @@ public class playermovement : MonoBehaviour
     public bool isJumpHeld;
     public bool isGrounded;
     public bool canJumpAgain;
+    private float horizontal;
+    private float speed = 8f;
 
-    [SerializeField]
-    private Transform foot;
-    [SerializeField]
-    private LayerMask groundMask;
+    [SerializeField] private Transform foot;
+    [SerializeField] private Transform jump;
+    [SerializeField] private Transform groundCheck;
+    [SerializeField] private LayerMask groundMask;
+    [SerializeField] private TrailRenderer tr;
 
     private Rigidbody2D rigidBody;
     private Vector2 move;
 
-    private bool CheckGrounding()
+    public bool isDead;
+
+    public Vector2 MoveAmount;
+
+    [Header("Dashing")]
+    public bool DashUnlocked;
+    private bool isDashing;
+    private float dashpower = 24f;
+    public bool canDash;
+
+    private void Update()
     {
-        RaycastHit2D hit;
 
-        hit = Physics2D.Raycast(foot.position, Vector2.down, 1.0f, groundMask);
-
-        return hit;
     }
+
     public void Awake()
     {
         rigidBody = this.GetComponent<Rigidbody2D>();
@@ -36,7 +48,7 @@ public class playermovement : MonoBehaviour
 
     public void Move(InputAction.CallbackContext context)
     {
-        rigidBody.linearVelocity = new Vector2(context.ReadValue<Vector2>().x * movespeed, rigidBody.linearVelocity.y);
+       MoveAmount = context.ReadValue<Vector2>();
     }
     public void Jump(InputAction.CallbackContext context)
     {
@@ -58,7 +70,7 @@ public class playermovement : MonoBehaviour
 
     void JumpCondition()
     {
-           bool isOnGround = IsGrounded(1.1f);
+        bool isOnGround = IsGrounded();
 
             if (isJumpHeld)
             {
@@ -82,38 +94,54 @@ public class playermovement : MonoBehaviour
     private void FixedUpdate()
     {
         JumpCondition();
-    }
 
-    public void MoveInput(InputAction.CallbackContext context)
-    {
-
-    }
-
-    public void JumpInput(InputAction.CallbackContext context)
-    {
+        if (!isDead)
+        {
+            Walking(); 
+        }
 
     }
 
     public void Walking()
     {
-
+        rigidBody.linearVelocity = new Vector2(MoveAmount.x * movespeed, rigidBody.linearVelocity.y);
     }
 
-    public bool IsGrounded(float distance)
+    public bool IsGrounded()
     {
-        RaycastHit2D hit;
-
-        hit = Physics2D.Raycast(this.transform.position, Vector2.down, distance, groundMask);
-        Debug.DrawRay(this.transform.position, Vector2.down, Color.red);
-
-        return hit;
+        return Physics2D.Raycast(groundCheck.position, Vector2.down, 0.1f, groundMask);
     }
-
+   
     public void ReturnToStable()
     {
 
     }
+
+
+    public void Dash(InputAction.CallbackContext context)
+    {
+        if (DashUnlocked)
+        {
+            if (context.started)
+            {
+                if (canDash)
+                {
+                   rigidBody.AddForce(new Vector2(dashpower * transform.localScale.x, 50), ForceMode2D.Impulse);
+                   canDash = false;
+                   StartCoroutine(DashDelay());
+                }
+                
+            }
+        }
+    }
     
+    IEnumerator DashDelay()
+    {
+        yield return new WaitForSeconds(1f);
+        canDash = true;
+    }
+
+
     IEnumerator DelayedJump()
     {
         yield return new WaitForSeconds(.15f);
