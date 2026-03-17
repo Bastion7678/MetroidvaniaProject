@@ -13,8 +13,6 @@ public class playermovement : MonoBehaviour
     public bool isJumpHeld;
     public bool isGrounded;
     public bool canJumpAgain;
-    private float horizontal;
-    private float speed = 8f;
 
     [SerializeField] private Transform foot;
     [SerializeField] private Transform jump;
@@ -69,17 +67,14 @@ public class playermovement : MonoBehaviour
 
     void JumpCondition()
     {
-        bool isOnGround = IsGrounded(1.2f);
+        bool isOnGround = IsGrounded(3.3f);
 
         if (isJumpHeld)
         {
-            Debug.Log("Jump is being held");
             if (isOnGround)
             {
-                Debug.Log("Player is on the ground");
                 if (canJumpAgain)
                 {
-                    Debug.Log("Player can jump again");
                     rigidBody.AddForce(new Vector2(0, jumpforce), ForceMode2D.Impulse);
                     canJumpAgain = false;
                     StartCoroutine(DelayedJump());
@@ -100,7 +95,6 @@ public class playermovement : MonoBehaviour
         {
             Walking(); 
         }
-
     }
 
     public void Walking()
