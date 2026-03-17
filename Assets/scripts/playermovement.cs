@@ -18,7 +18,6 @@ public class playermovement : MonoBehaviour
 
     [SerializeField] private Transform foot;
     [SerializeField] private Transform jump;
-    [SerializeField] private Transform groundCheck;
     [SerializeField] private LayerMask groundMask;
     [SerializeField] private TrailRenderer tr;
 
@@ -32,7 +31,7 @@ public class playermovement : MonoBehaviour
     [Header("Dashing")]
     public bool DashUnlocked;
     private bool isDashing;
-    private float dashpower = 24f;
+    public float dashpower = 50f;
     public bool canDash;
 
     private void Update()
@@ -64,31 +63,33 @@ public class playermovement : MonoBehaviour
         }
         isJumpHeld = context.ReadValue<float>() > 0;
 
-        //rigidBody.AddForce(jumpforce * Vector2.up, ForceMode2D.Impulse);
+    
 
     }
 
     void JumpCondition()
     {
-        bool isOnGround = IsGrounded();
+        bool isOnGround = IsGrounded(1.2f);
 
-            if (isJumpHeld)
+        if (isJumpHeld)
+        {
+            Debug.Log("Jump is being held");
+            if (isOnGround)
             {
-                if (isOnGround)
+                Debug.Log("Player is on the ground");
+                if (canJumpAgain)
                 {
-                    if (canJumpAgain)
-                    {
-                        rigidBody.AddForce(new Vector2(0, jumpforce), ForceMode2D.Impulse);
-                            canJumpAgain = false;
-                            StartCoroutine(DelayedJump());
-                    }
-                    else if (isHoldingJump)
-                    {
-                        rigidBody.AddForce(new Vector2(0, jumpforce));
-                    }
+                    Debug.Log("Player can jump again");
+                    rigidBody.AddForce(new Vector2(0, jumpforce), ForceMode2D.Impulse);
+                    canJumpAgain = false;
+                    StartCoroutine(DelayedJump());
+                }
+                else if (isHoldingJump)
+                {
+                    rigidBody.AddForce(new Vector2(0, jumpforce));
                 }
             }
-        
+        }
     }
 
     private void FixedUpdate()
@@ -107,9 +108,14 @@ public class playermovement : MonoBehaviour
         rigidBody.linearVelocity = new Vector2(MoveAmount.x * movespeed, rigidBody.linearVelocity.y);
     }
 
-    public bool IsGrounded()
+    public bool IsGrounded(float Distance)
     {
-        return Physics2D.Raycast(groundCheck.position, Vector2.down, 0.1f, groundMask);
+        RaycastHit2D hit;
+
+        hit =  Physics2D.Raycast(this.transform.position, Vector2.down, Distance, groundMask);
+        Debug.DrawRay(this.transform.position, Vector2.down * Distance, Color.red);
+
+        return hit;
     }
    
     public void ReturnToStable()
@@ -126,9 +132,11 @@ public class playermovement : MonoBehaviour
             {
                 if (canDash)
                 {
-                   rigidBody.AddForce(new Vector2(dashpower * transform.localScale.x, 50), ForceMode2D.Impulse);
-                   canDash = false;
-                   StartCoroutine(DashDelay());
+                    Debug.Log("Player can dash");
+                    //rigidBody.AddForce(new Vector2(dashpower, 0), ForceMode2D.Impulse);
+                    rigidBody.AddForceAtPosition(new Vector2(dashpower, 0), transform.right, ForceMode2D.Impulse);
+                    canDash = false;
+                    StartCoroutine(DashDelay());
                 }
                 
             }
