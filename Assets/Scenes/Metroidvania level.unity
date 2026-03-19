@@ -1145,8 +1145,8 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-    m_ActionId: 27784165-c639-402f-b867-800860868fde
-    m_ActionName: 'Player/Dash[/Keyboard/shift]'
+    m_ActionId: acd839d4-118d-4f2b-81a6-07aea1e52c2f
+    m_ActionName: 'Player/dash[/Keyboard/f]'
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Player

@@ -107,11 +107,13 @@ public class playermovement : MonoBehaviour
         {
             if(MoveAmount.x >= 0)
             {
-                rigidBody.linearVelocity = new Vector2(MoveAmount.x * movespeed + dashpower, rigidBody.linearVelocity.y);
+                rigidBody.linearVelocity = new Vector2( movespeed + dashpower, rigidBody.linearVelocity.y);
+                Debug.Log("Dashing");
             }
+            
             else if (MoveAmount.x < 0)
             {
-                rigidBody.linearVelocity = new Vector2(MoveAmount.x * movespeed + -dashpower, rigidBody.linearVelocity.y);
+                rigidBody.linearVelocity = new Vector2( movespeed + -dashpower, rigidBody.linearVelocity.y);
             }
             StartCoroutine(currentlyDashing());
         }
