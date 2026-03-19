@@ -99,7 +99,22 @@ public class playermovement : MonoBehaviour
 
     public void Walking()
     {
-        rigidBody.linearVelocity = new Vector2(MoveAmount.x * movespeed, rigidBody.linearVelocity.y);
+        if (!isDashing)
+        {
+            rigidBody.linearVelocity = new Vector2(MoveAmount.x * movespeed, rigidBody.linearVelocity.y);
+        }
+        else if (isDashing)
+        {
+            if(MoveAmount.x >= 0)
+            {
+                rigidBody.linearVelocity = new Vector2(MoveAmount.x * movespeed + dashpower, rigidBody.linearVelocity.y);
+            }
+            else if (MoveAmount.x < 0)
+            {
+                rigidBody.linearVelocity = new Vector2(MoveAmount.x * movespeed + -dashpower, rigidBody.linearVelocity.y);
+            }
+            StartCoroutine(currentlyDashing());
+        }
     }
 
     public bool IsGrounded(float Distance)
@@ -126,9 +141,7 @@ public class playermovement : MonoBehaviour
             {
                 if (canDash)
                 {
-                    Debug.Log("Player can dash");
-                    //rigidBody.AddForce(new Vector2(dashpower, 0), ForceMode2D.Impulse);
-                    rigidBody.AddForceAtPosition(new Vector2(dashpower, 0), transform.right, ForceMode2D.Impulse);
+                    isDashing = true;
                     canDash = false;
                     StartCoroutine(DashDelay());
                 }
@@ -148,5 +161,11 @@ public class playermovement : MonoBehaviour
     {
         yield return new WaitForSeconds(.15f);
         canJumpAgain = true;
+    }
+
+    IEnumerator currentlyDashing()
+    {
+        yield return new WaitForSeconds(.5f);
+        isDashing = false;
     }
 }
