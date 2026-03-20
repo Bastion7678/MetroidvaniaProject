@@ -32,10 +32,8 @@ public class playermovement : MonoBehaviour
     public float dashpower = 50f;
     public bool canDash;
 
-    private void Update()
-    {
+    public Vector2 lastSavelocation;
 
-    }
 
     public void Awake()
     {
@@ -125,6 +123,13 @@ public class playermovement : MonoBehaviour
 
         hit =  Physics2D.Raycast(this.transform.position, Vector2.down, Distance, groundMask);
         Debug.DrawRay(this.transform.position, Vector2.down * Distance, Color.red);
+
+        if(hit == true)
+        {
+            Debug.Log("Grounded");
+            lastSavelocation = this.transform.position;
+        }
+      
 
         return hit;
     }
