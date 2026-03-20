@@ -1,9 +1,8 @@
 using System.Collections;
-using Unity.VisualScripting.Antlr3.Runtime.Tree;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.Rendering;
-using static UnityEditor.Searcher.SearcherWindow.Alignment;
+
+
 
 public class playermovement : MonoBehaviour
 {
